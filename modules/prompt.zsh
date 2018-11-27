@@ -22,7 +22,7 @@ version_prompt(){
 
 am_r_prompt(){
   if [[ $(am_is_git) == 1 ]]; then
-    echo -ne "`am_bg_count``am_git_rebasing`%F{$am_vcs_color}${AM_GIT_SYM}:%f`am_git_branch``am_git_commit_time` `am_git_rev``am_git_left_right``am_git_dirty`"
+    echo -ne "`am_bg_count``am_git_rebasing`%F{$am_vcs_color}${AM_GIT_SYM}:%f`am_git_branch``am_git_left_right``am_git_dirty`"
   elif [[ $(am_is_hg) == 1 ]]; then
     echo -ne "`am_bg_count`%F{$am_vcs_color}${AM_HG_SYM}:%f`am_hg_branch` `am_hg_rev`"
   elif [[ $(am_is_svn) == 1 ]]; then
@@ -60,6 +60,27 @@ function am_prompt_general_long_dir(){
   [[ $AM_HIDE_EXIT_CODE -ne 1 ]] && echo -ne "%(?.. %F{$am_fade_color}%?%f)"
 }
 
+# current working directory, abbreviated (the magic part)
+function am_section_pwd() {
+  local p="$(print -nP '%/')"
+  local o=""
+
+  if [[ $p == / ]]; then
+    o+='/'
+  else
+    [[ $p == $HOME/* || $p == $HOME ]] && p=${p#${HOME}} && o+='~'
+
+    for d in ${(s:/:)p}; do
+      [[ "${d:0:1}" == "." ]] && o+="/${d:0:2}" || o+="/${d:0:1}"
+    done
+
+    [[ "${d:0:1}" == "." ]] && o+="${d:2}" || o+="${d:1}"
+  fi
+  end_tag="%F{$PROMPT_END_TAG_COLOR}${PROMPT_END_TAG}%f"
+  start_tag="%F{$PROMPT_START_TAG_COLOR}${PROMPT_START_TAG}%f"
+  echo -ne "%(?.%F{$am_normal_color}$o%f${end_tag}.%F{$am_error_color}%B$o%b%f${end_tag})"
+}
+
 function am_prompt_complete(){
   if [[ $AM_UPDATE_L_PROMPT == 1 ]];then
     if [[ ${AM_INITIAL_LINE_FEED} == 1 ]]; then
@@ -73,8 +94,16 @@ function am_prompt_complete(){
     fi
     zle && zle reset-prompt
   fi
-  RPROMPT='`version_prompt` `am_r_prompt`${VIM_PROMPT}'
+  RPROMPT='`am_r_prompt`'
   zle && zle reset-prompt
   async_stop_worker prompt -n
   unset AM_EMPTY_BUFFER
+}
+
+function am_section_logon() {
+  print -n "%F{$am_php_color}%m@%n%f"
+}
+
+function am_last_exit_status() {
+  [[ $AM_HIDE_EXIT_CODE -ne 1 ]] && echo -ne "%(?..%F{$am_fade_color}%? %f)"
 }

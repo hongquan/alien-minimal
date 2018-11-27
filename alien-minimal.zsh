@@ -32,7 +32,7 @@ function precmd(){
   autoload -U add-zsh-hook
   setopt prompt_subst
   am_load_theme
-  __time="`am_get_time_prompt`"
+  # __time="`am_get_time_prompt`"
   am_preexec_executed=0
   if [[ $AM_UPDATE_L_PROMPT == 1 ]]; then
     if [[ ${AM_INITIAL_LINE_FEED} == 1 ]]; then
@@ -62,7 +62,7 @@ function precmd(){
       PROMPT='
 `am_ssh_st`$__time`am_venv` `am_prompt_general_short_dir` '
     else
-      PROMPT='`am_ssh_st`$__time`am_venv` `am_prompt_general_short_dir` '
+      PROMPT='`am_last_exit_status``am_venv``am_section_logon` `am_section_pwd` '
     fi
   fi
   RPROMPT='${VIM_PROMPT}'
