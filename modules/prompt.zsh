@@ -101,7 +101,7 @@ function am_prompt_complete(){
 }
 
 function am_section_logon() {
-  print -n "%F{$am_php_color}%m@%n%f"
+  print -n "%F{$am_php_color}%n@%m%f"
 }
 
 function am_last_exit_status() {
