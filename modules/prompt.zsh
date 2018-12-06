@@ -84,7 +84,7 @@ function am_section_pwd() {
   else
     start_tag="%F{$PROMPT_START_TAG_COLOR}${PROMPT_START_TAG}%f"
     echo -ne "${start_tag}"
-    echo -ne "%(?.%F{$am_normal_color}$o%f${end_tag}.%F{$am_error_color}%B$o%b%f${end_tag})"
+    echo -ne "%(?:%F{$am_normal_color}$o%f${end_tag}:%F{$am_error_color}%B$o%b%f${end_tag})"
   fi
 }
 
